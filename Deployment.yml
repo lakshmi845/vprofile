@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: vlog1-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vlog1
+  template:
+    metadata:
+      name: vlog1-pod
+      labels:
+        app: vlog1
+    spec:
+      containers:
+      - name: vlog1
+        image: acrvpro/vprofile:latest
+        ports:
+          - containerPort: 8080
+          
+## create loadBalancer service for replicaset
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vlogsvc
+spec:
+  type: LoadBalancer
+  selector:
+    app: vlog1
+  ports:
+  - port: 8080
+    targetPort: 8080
